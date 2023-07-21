@@ -2,13 +2,12 @@ package ru.yandex.practicum.scooter.order;
 
 import io.qameta.allure.Step;
 import io.qameta.allure.junit4.DisplayName;
-import io.restassured.RestAssured;
 import io.restassured.response.ValidatableResponse;
 import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+import ru.yandex.practicum.scooter.UrlBeforeTest;
 import ru.yandex.practicum.scooter.jsonclass.Order;
 import ru.yandex.practicum.scooter.steps.OrderSteps;
 import java.util.List;
@@ -16,7 +15,7 @@ import static org.hamcrest.Matchers.*;
 
 @RunWith(Parameterized.class)
 @DisplayName("Тесты на создание заказов с разными цветами")
-public class OrderCreateTest {
+public class OrderCreateTest extends UrlBeforeTest {
 
     OrderSteps orderSteps = new OrderSteps();
     int track;
@@ -51,18 +50,14 @@ public class OrderCreateTest {
                 {"Манки Д.", "Луффи", "Деревня Фууся", "1", "+79876543210", 1, "1505-05-05", "Я — Луффи! Я стану Королём пиратов!", List.of()},
         };
     }
-    @Before
-    public void setURL(){
-        RestAssured.baseURI="http://qa-scooter.praktikum-services.ru";
-    }
 
     @Test
     @DisplayName("Оформляем заказ")
     public void orderCreate(){
         Order order =new Order(firstName, lastName, address, metroStation, phone, rentTime, deliveryDate, comment, color);
         ValidatableResponse response = orderSteps.orderCreate(order);
-        response.assertThat().body("track", is(notNullValue())).and().statusCode(201);
         track=response.extract().path("track");
+        response.assertThat().body("track", is(notNullValue())).and().statusCode(201);
     }
 
     @After

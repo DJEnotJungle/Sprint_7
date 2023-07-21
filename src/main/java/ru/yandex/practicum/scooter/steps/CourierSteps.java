@@ -7,6 +7,7 @@ import static io.restassured.RestAssured.given;
 import static ru.yandex.practicum.scooter.constants.Constants.*;
 
 public class CourierSteps {
+
     @Step("Создание курьера")
     public ValidatableResponse courierCreate(Courier courier){
         return given()
